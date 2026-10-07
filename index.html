@@ -1,0 +1,742 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Accounts Dashboard | Oleevia</title>
+  <meta name="description" content="Secure internal employee launchpad for banking and cooperative applications and support services.">
+  
+  <!-- Modern Typography (Inter with system fallbacks) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    /* ==========================================================================
+       BRAND & DESIGN SYSTEM TOKENS
+       Adjust --brand-primary to match your financial institution's brand color.
+       ========================================================================== */
+    :root {
+      /* Brand Primary (Oleevia Corporate Blue & Red) */
+      --brand-primary: #014790;
+      --brand-primary-hover: #01356d;
+      --brand-primary-light: #e6eff9;
+      --brand-accent: #dd052e;
+
+      /* Neutrals & Surfaces (Light Mode) */
+      --bg-page: #f8fafc;
+      --bg-surface: #ffffff;
+      --bg-surface-hover: #f1f5f9;
+      --bg-tinted: #f0f4f9;
+      --border-color: #e2e8f0;
+      --border-color-hover: #cbd5e1;
+
+      /* Typography */
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+      --text-subtle: #94a3b8;
+      --text-on-primary: #ffffff;
+
+      /* Shadows & Radii */
+      --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+      --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.07), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+      --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -4px rgba(0, 0, 0, 0.04);
+      --shadow-focus: 0 0 0 3px rgba(13, 59, 102, 0.25);
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 16px;
+      --radius-full: 9999px;
+
+      /* Transitions */
+      --transition-fast: 150ms ease;
+      --transition-normal: 250ms ease;
+    }
+
+    /* Dark Mode Theme Tokens */
+    [data-theme="dark"] {
+      --brand-primary: #1d72d2;
+      --brand-primary-hover: #3b8cf0;
+      --brand-primary-light: rgba(29, 114, 210, 0.2);
+      --brand-accent: #ef4444;
+
+      --bg-page: #0b1120;
+      --bg-surface: #131d31;
+      --bg-surface-hover: #1e293b;
+      --bg-tinted: #17233d;
+      --border-color: #24344d;
+      --border-color-hover: #3b5070;
+
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --text-subtle: #64748b;
+      --text-on-primary: #ffffff;
+
+      --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.4);
+      --shadow-md: 0 4px 8px -1px rgba(0, 0, 0, 0.45);
+      --shadow-lg: 0 12px 20px -3px rgba(0, 0, 0, 0.55);
+      --shadow-focus: 0 0 0 3px rgba(56, 189, 248, 0.35);
+    }
+
+    /* Base Reset & Typography */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background-color: #0b1120;
+      background-image: url('background.jpg');
+      background-size: cover;
+      background-position: center center;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+      color: var(--text-main);
+      line-height: 1.5;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      transition: color var(--transition-normal);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* In dark mode only, apply a sleek dark tint to keep the 3D rupee moody and comfortable */
+    [data-theme="dark"] body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(11, 17, 32, 0.82) 0%, rgba(13, 27, 56, 0.88) 100%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    /* Container */
+    .container {
+      width: 100%;
+      max-width: 1240px;
+      margin-left: auto;
+      margin-right: auto;
+      padding-left: 20px;
+      padding-right: 20px;
+    }
+
+
+
+    /* ==========================================================================
+       MIDDLE SECTION (PROMINENT CENTERED OLEEVIA LOGO)
+       ========================================================================== */
+    .middle-section {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 40px;
+      text-align: center;
+    }
+
+    .brand-link {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      text-decoration: none;
+      padding: 8px 12px;
+      background: transparent;
+      border: none;
+      box-shadow: none;
+      transition: transform var(--transition-fast);
+    }
+
+    .brand-link:hover {
+      transform: translateY(-2px) scale(1.04);
+    }
+
+    .brand-link:focus-visible {
+      outline: none;
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-focus);
+    }
+
+    .middle-logo {
+      height: 130px;
+      width: auto;
+      max-height: 150px;
+      max-width: 90vw;
+      object-fit: contain;
+      display: block;
+      filter: drop-shadow(0 8px 24px rgba(0, 0, 0, 0.22)) drop-shadow(0 2px 10px rgba(255, 255, 255, 0.45));
+      transition: transform var(--transition-fast), filter var(--transition-fast);
+    }
+
+    [data-theme="dark"] .brand-link {
+      background: transparent;
+      border: none;
+      box-shadow: none;
+    }
+
+    [data-theme="dark"] .middle-logo {
+      height: 130px;
+      filter: drop-shadow(0 8px 24px rgba(0, 0, 0, 0.9)) brightness(1.15);
+    }
+
+    /* ==========================================================================
+       MAIN CONTENT
+       ========================================================================== */
+    main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 40px 0 44px;
+    }
+
+    @media (max-width: 600px) {
+      main {
+        padding: 28px 0 36px;
+      }
+      .middle-logo,
+      [data-theme="dark"] .middle-logo {
+        height: 85px;
+      }
+    }
+
+    /* ==========================================================================
+       ACCOUNTS DASHBOARD & BANKING CARDS (TITLES ONLY)
+       ========================================================================== */
+    .dashboard-section {
+      width: 100%;
+      margin: 0 auto 20px;
+    }
+
+    /* Grid Layout for Banking Cards */
+    .bank-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 20px;
+    }
+
+    @media (min-width: 1200px) {
+      .bank-grid {
+        grid-template-columns: repeat(4, 1fr);
+      }
+    }
+
+    @media (max-width: 860px) {
+      .bank-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 540px) {
+      .bank-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* Bank Card Style */
+    .bank-card {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 16px;
+      min-height: 148px;
+      background-color: rgba(255, 255, 255, 0.88);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      border: 1px solid rgba(255, 255, 255, 0.85);
+      border-radius: var(--radius-lg);
+      padding: 20px 22px;
+      text-decoration: none;
+      color: inherit;
+      box-shadow: 0 10px 28px -4px rgba(1, 71, 144, 0.09), 0 2px 6px rgba(0, 0, 0, 0.03);
+      transition: all var(--transition-normal);
+      overflow: hidden;
+      outline: none;
+    }
+
+    [data-theme="dark"] .bank-card {
+      background-color: rgba(19, 29, 49, 0.84);
+      border-color: rgba(255, 255, 255, 0.12);
+      box-shadow: 0 12px 30px -4px rgba(0, 0, 0, 0.55);
+    }
+
+    /* Top bank accent strip */
+    .bank-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: var(--bank-accent, var(--brand-primary));
+      opacity: 0.9;
+      transition: height var(--transition-fast), opacity var(--transition-fast);
+    }
+
+    .bank-card:hover {
+      transform: translateY(-4px);
+      border-color: var(--bank-accent, var(--brand-primary));
+      box-shadow: 0 20px 38px -8px rgba(1, 71, 144, 0.22), 0 6px 14px rgba(0, 0, 0, 0.05);
+    }
+
+    [data-theme="dark"] .bank-card:hover {
+      box-shadow: 0 20px 40px -8px rgba(0, 0, 0, 0.75), 0 0 22px -8px var(--bank-accent, var(--brand-primary));
+    }
+
+    .bank-card:hover::before {
+      height: 5px;
+      opacity: 1;
+    }
+
+    .bank-card:focus-visible {
+      outline: none;
+      box-shadow: var(--shadow-focus);
+      border-color: var(--brand-primary);
+    }
+
+    /* Card Header */
+    .bank-card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .bank-icon-box {
+      width: 44px;
+      height: 44px;
+      border-radius: var(--radius-md);
+      background-color: var(--bank-accent-light, rgba(1, 71, 144, 0.1));
+      color: var(--bank-accent, var(--brand-primary));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      transition: transform var(--transition-fast);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    }
+
+    .bank-card:hover .bank-icon-box {
+      transform: scale(1.08);
+    }
+
+    .bank-icon-box svg {
+      width: 24px;
+      height: 24px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    /* Bank Logo Image Box */
+    .bank-logo-box {
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      width: 100%;
+      height: 68px;
+      transition: transform var(--transition-fast);
+    }
+
+    .bank-card-logo {
+      height: 64px;
+      max-height: 68px;
+      max-width: 100%;
+      width: auto;
+      object-fit: contain;
+      object-position: left center;
+      display: block;
+      filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.08));
+      transition: transform var(--transition-fast);
+    }
+
+    .bank-card:hover .bank-logo-box {
+      transform: scale(1.03);
+    }
+
+    [data-theme="dark"] .bank-logo-box {
+      background-color: rgba(255, 255, 255, 0.98);
+      padding: 8px 16px;
+      border-radius: var(--radius-md);
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+      width: 100%;
+      height: 68px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    [data-theme="dark"] .bank-card-logo {
+      height: 52px;
+      max-height: 54px;
+      max-width: 100%;
+      object-position: center;
+      filter: none;
+    }
+
+    .action-arrow {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background-color: var(--bank-accent-light, rgba(1, 71, 144, 0.08));
+      color: var(--bank-accent, var(--brand-primary));
+      flex-shrink: 0;
+      transition: transform var(--transition-fast), background-color var(--transition-fast), color var(--transition-fast);
+    }
+
+    .bank-card:hover .action-arrow {
+      transform: translate(2px, -2px);
+      background-color: var(--bank-accent, var(--brand-primary));
+      color: #ffffff;
+    }
+
+    .action-arrow svg {
+      width: 15px;
+      height: 15px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 2.2;
+    }
+
+    /* Card Content */
+    .bank-card-content {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      width: 100%;
+    }
+
+    .bank-card-title {
+      font-size: 1.125rem;
+      font-weight: 700;
+      color: var(--text-main);
+      line-height: 1.3;
+      letter-spacing: -0.01em;
+      transition: color var(--transition-fast);
+      margin: 0;
+    }
+
+    .bank-card:hover .bank-card-title {
+      color: var(--bank-accent, var(--brand-primary));
+    }
+
+    /* Screen reader only utility */
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    /* Bottom Contact Support */
+    .bottom-support {
+      text-align: center;
+      margin-top: 28px;
+      padding: 0 16px;
+      position: relative;
+      z-index: 10;
+    }
+
+    .bottom-support-text {
+      color: #014790;
+      font-size: 0.95rem;
+      font-weight: 600;
+      margin: 0;
+      letter-spacing: -0.01em;
+      text-shadow: 0 1px 2px rgba(255, 255, 255, 0.85);
+    }
+
+    .bottom-support-text a {
+      color: #014790;
+      font-weight: 700;
+      text-decoration: underline;
+      text-underline-offset: 3px;
+      transition: color var(--transition-fast), opacity var(--transition-fast);
+      text-shadow: 0 1px 2px rgba(255, 255, 255, 0.85);
+    }
+
+    .bottom-support-text a:hover {
+      color: #de042d;
+    }
+
+    [data-theme="dark"] .bottom-support-text,
+    [data-theme="dark"] .bottom-support-text a {
+      color: #38bdf8;
+      text-shadow: 0 2px 8px rgba(0, 0, 0, 0.9);
+    }
+
+    [data-theme="dark"] .bottom-support-text a:hover {
+      color: #f87171;
+    }
+  </style>
+</head>
+<body>
+
+
+
+  <!-- ==========================================
+       MAIN LAUNCHPAD AREA
+       ========================================== -->
+  <main>
+    <div class="container">
+
+      <!-- MIDDLE SECTION: CENTERED OLEEVIA LOGO -->
+      <div class="middle-section">
+        <a href="#" class="brand-link" aria-label="Oleevia Home">
+          <img src="oleevia-logo-white-text.png" alt="Oleevia" class="middle-logo">
+        </a>
+      </div>
+
+      <!-- ACCOUNTS & BANKING PORTALS SECTION (CARDS ONLY) -->
+      <section class="dashboard-section" aria-label="Banking Portals">
+        <!-- Banking Cards Grid -->
+        <div class="bank-grid" id="bank-grid">
+
+          <!-- 1. Axis neo -->
+          <a href="https://neo.axisbank.com/" target="_blank" rel="noopener noreferrer" class="bank-card" style="--bank-accent: #97144d; --bank-accent-light: rgba(151, 20, 77, 0.12);" title="Open Axis neo (Opens in new window)">
+            <div class="bank-card-header">
+              <div class="bank-logo-box">
+                <img src="axis-bank-logo.png" alt="Axis Bank" class="bank-card-logo">
+              </div>
+            </div>
+            <div class="bank-card-content">
+              <h3 class="bank-card-title">Axis neo</h3>
+              <span class="action-arrow" aria-hidden="true">
+                <svg viewBox="0 0 24 24"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
+              </span>
+            </div>
+          </a>
+
+          <!-- 2. Yes corporate -->
+          <a href="https://corporate.yesbank.in/" target="_blank" rel="noopener noreferrer" class="bank-card" style="--bank-accent: #004b87; --bank-accent-light: rgba(0, 75, 135, 0.12);" title="Open Yes corporate (Opens in new window)">
+            <div class="bank-card-header">
+              <div class="bank-logo-box">
+                <img src="yes-bank-logo.png" alt="YES BANK" class="bank-card-logo">
+              </div>
+            </div>
+            <div class="bank-card-content">
+              <h3 class="bank-card-title">Yes corporate</h3>
+              <span class="action-arrow" aria-hidden="true">
+                <svg viewBox="0 0 24 24"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
+              </span>
+            </div>
+          </a>
+
+          <!-- 3. RBL corporate -->
+          <a href="https://corporate.rblbank.com/" target="_blank" rel="noopener noreferrer" class="bank-card" style="--bank-accent: #002a5c; --bank-accent-light: rgba(0, 42, 92, 0.12);" title="Open RBL corporate (Opens in new window)">
+            <div class="bank-card-header">
+              <div class="bank-logo-box">
+                <img src="rbl-bank-logo.png" alt="RBL Bank" class="bank-card-logo">
+              </div>
+            </div>
+            <div class="bank-card-content">
+              <h3 class="bank-card-title">RBL corporate</h3>
+              <span class="action-arrow" aria-hidden="true">
+                <svg viewBox="0 0 24 24"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
+              </span>
+            </div>
+          </a>
+
+          <!-- 4. ESAF corporate -->
+          <a href="https://corporate.esafbank.com/" target="_blank" rel="noopener noreferrer" class="bank-card" style="--bank-accent: #003780; --bank-accent-light: rgba(0, 55, 128, 0.12);" title="Open ESAF corporate (Opens in new window)">
+            <div class="bank-card-header">
+              <div class="bank-logo-box">
+                <img src="esaf-bank-logo.png" alt="ESAF Small Finance Bank" class="bank-card-logo">
+              </div>
+            </div>
+            <div class="bank-card-content">
+              <h3 class="bank-card-title">ESAF corporate</h3>
+              <span class="action-arrow" aria-hidden="true">
+                <svg viewBox="0 0 24 24"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
+              </span>
+            </div>
+          </a>
+
+          <!-- 5. Yes online -->
+          <a href="https://retail.yesbank.in/" target="_blank" rel="noopener noreferrer" class="bank-card" style="--bank-accent: #0b66c2; --bank-accent-light: rgba(11, 102, 194, 0.12);" title="Open Yes online (Opens in new window)">
+            <div class="bank-card-header">
+              <div class="bank-logo-box">
+                <img src="yes-bank-logo.png" alt="YES BANK" class="bank-card-logo">
+              </div>
+            </div>
+            <div class="bank-card-content">
+              <h3 class="bank-card-title">Yes online</h3>
+              <span class="action-arrow" aria-hidden="true">
+                <svg viewBox="0 0 24 24"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
+              </span>
+            </div>
+          </a>
+
+          <!-- 6. HDFC personal netbanking -->
+          <a href="https://netbanking.hdfcbank.com/netbanking/" target="_blank" rel="noopener noreferrer" class="bank-card" style="--bank-accent: #004c8f; --bank-accent-light: rgba(0, 76, 143, 0.12);" title="Open HDFC personal netbanking (Opens in new window)">
+            <div class="bank-card-header">
+              <div class="bank-logo-box">
+                <img src="hdfc-bank-logo.png" alt="HDFC Bank" class="bank-card-logo">
+              </div>
+            </div>
+            <div class="bank-card-content">
+              <h3 class="bank-card-title">HDFC personal netbanking</h3>
+              <span class="action-arrow" aria-hidden="true">
+                <svg viewBox="0 0 24 24"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
+              </span>
+            </div>
+          </a>
+
+          <!-- 7. HDFC corporate -->
+          <a href="https://netbanking.hdfcbank.com/corp/" target="_blank" rel="noopener noreferrer" class="bank-card" style="--bank-accent: #002e5b; --bank-accent-light: rgba(0, 46, 91, 0.12);" title="Open HDFC corporate (Opens in new window)">
+            <div class="bank-card-header">
+              <div class="bank-logo-box">
+                <img src="hdfc-bank-logo.png" alt="HDFC Bank" class="bank-card-logo">
+              </div>
+            </div>
+            <div class="bank-card-content">
+              <h3 class="bank-card-title">HDFC corporate</h3>
+              <span class="action-arrow" aria-hidden="true">
+                <svg viewBox="0 0 24 24"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
+              </span>
+            </div>
+          </a>
+
+          <!-- 8. CSB corporate -->
+          <a href="https://corporate.csb.co.in/" target="_blank" rel="noopener noreferrer" class="bank-card" style="--bank-accent: #d9531e; --bank-accent-light: rgba(217, 83, 30, 0.12);" title="Open CSB corporate (Opens in new window)">
+            <div class="bank-card-header">
+              <div class="bank-logo-box">
+                <img src="csb-bank-logo.png" alt="CSB Bank" class="bank-card-logo">
+              </div>
+            </div>
+            <div class="bank-card-content">
+              <h3 class="bank-card-title">CSB corporate</h3>
+              <span class="action-arrow" aria-hidden="true">
+                <svg viewBox="0 0 24 24"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
+              </span>
+            </div>
+          </a>
+
+          <!-- 9. FED one -->
+          <a href="https://fedone.federalbank.co.in/" target="_blank" rel="noopener noreferrer" class="bank-card" style="--bank-accent: #003874; --bank-accent-light: rgba(0, 56, 116, 0.12);" title="Open FED one (Opens in new window)">
+            <div class="bank-card-header">
+              <div class="bank-logo-box">
+                <img src="federal-bank-logo.png" alt="Federal Bank" class="bank-card-logo">
+              </div>
+            </div>
+            <div class="bank-card-content">
+              <h3 class="bank-card-title">FED one</h3>
+              <span class="action-arrow" aria-hidden="true">
+                <svg viewBox="0 0 24 24"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
+              </span>
+            </div>
+          </a>
+
+          <!-- 10. IDFC netbanking -->
+          <a href="https://my.idfcfirstbank.com/login" target="_blank" rel="noopener noreferrer" class="bank-card" style="--bank-accent: #9e1b32; --bank-accent-light: rgba(158, 27, 50, 0.12);" title="Open IDFC netbanking (Opens in new window)">
+            <div class="bank-card-header">
+              <div class="bank-logo-box">
+                <img src="idfc-bank-logo.png" alt="IDFC FIRST Bank" class="bank-card-logo">
+              </div>
+            </div>
+            <div class="bank-card-content">
+              <h3 class="bank-card-title">IDFC netbanking</h3>
+              <span class="action-arrow" aria-hidden="true">
+                <svg viewBox="0 0 24 24"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
+              </span>
+            </div>
+          </a>
+
+          <!-- 11. FED net -->
+          <a href="https://www.fednetbank.com/" target="_blank" rel="noopener noreferrer" class="bank-card" style="--bank-accent: #0f52ba; --bank-accent-light: rgba(15, 82, 186, 0.12);" title="Open FED net (Opens in new window)">
+            <div class="bank-card-header">
+              <div class="bank-logo-box">
+                <img src="federal-bank-logo.png" alt="Federal Bank" class="bank-card-logo">
+              </div>
+            </div>
+            <div class="bank-card-content">
+              <h3 class="bank-card-title">FED net</h3>
+              <span class="action-arrow" aria-hidden="true">
+                <svg viewBox="0 0 24 24"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
+              </span>
+            </div>
+          </a>
+
+        </div>
+
+        <!-- Bottom Contact Support -->
+        <div class="bottom-support">
+          <p class="bottom-support-text">For more contact <a href="mailto:itsupport@oleeviagroup.com">itsupport@oleeviagroup.com</a></p>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- ==========================================
+       CLIENT LOGIC (VANILLA JS)
+       - Dark / Light Theme with localStorage & OS detection
+       - Optional keyboard shortcut ('T' to toggle theme)
+       ========================================== -->
+  <script>
+    (function () {
+      'use strict';
+
+      // --- THEME MANAGEMENT ---
+      const THEME_KEY = 'employee_portal_theme';
+      const rootHtml = document.documentElement;
+
+      function applyTheme(theme) {
+        if (theme === 'dark') {
+          rootHtml.setAttribute('data-theme', 'dark');
+        } else {
+          rootHtml.removeAttribute('data-theme');
+        }
+      }
+
+      // Read preference: localStorage -> matchMedia -> default to light
+      function initTheme() {
+        const savedTheme = localStorage.getItem(THEME_KEY);
+        if (savedTheme) {
+          applyTheme(savedTheme);
+        } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+          applyTheme('dark');
+        } else {
+          applyTheme('light');
+        }
+      }
+
+      function toggleTheme() {
+        const isCurrentDark = rootHtml.getAttribute('data-theme') === 'dark';
+        const newTheme = isCurrentDark ? 'light' : 'dark';
+        localStorage.setItem(THEME_KEY, newTheme);
+        applyTheme(newTheme);
+      }
+
+      // Initialize theme on load
+      initTheme();
+
+      // Keyboard shortcut: Press 't' or 'T' to toggle theme
+      window.addEventListener('keydown', (e) => {
+        const isEditing = ['INPUT', 'TEXTAREA'].includes(document.activeElement.tagName);
+        if ((e.key === 't' || e.key === 'T') && !isEditing) {
+          toggleTheme();
+        }
+      });
+
+    })();
+  </script>
+</body>
+</html>
